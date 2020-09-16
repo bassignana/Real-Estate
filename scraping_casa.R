@@ -9,16 +9,16 @@ url2pg <- "https://www.casa.it/vendita/residenziale/torino/centro-giardini-reali
 #numero pagine da cercare
 n_pag_da_cercare <- 15
 #scraping dei prezzi+locali+mq = trio, di tutte le pagine####
-#crea la lista vuota per contenere in ogni sublista tutti i prezzi di una pagina 
+
 trio <- list()
 
-#metto i risultati della prima pagina nella prima sublista
+
 trio[[1]] <- url %>% 
   read_html() %>% 
   html_nodes(".features") %>% 
   html_text()
 
-#provando a fare finalmente un ciclo for che funzioni
+
 for (i in 2:n_pag_da_cercare) {
   url1 = paste(url2pg,i, sep="")
   trio[[i]] <- url1 %>% 
@@ -109,7 +109,6 @@ for (i in 1:n) {
 }
 
 #df####
-#sono presenti anche gli annunci delle prime pagine fatti separatamente ??
 
 #aggiungere numero di pagina e numero annuncio <- NON PRECISO
 m <- length(prezzi_vec_int_casa)
@@ -124,7 +123,3 @@ colnames(df_casa) = c("prezzo","mq", "locali","annuncio","pagina")
 
 write.csv(df_casa, "/Users/tommasobassignana/Desktop/df_casa.csv")
 
-# 
-# ESSENDO CHE NON SI RIESCE A RIMUOVERE LE CASE ANCORA IN COSTRUZIONE ED ESSENDO CHE 
-# ESSE NON COMPAIONON IN TUTTE LE PAGINE DI RICERCA
-# L'INDICE DELLE PAGINE E DEGLI ANNUNCI è TOTALMENTE SBALLATO
