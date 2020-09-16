@@ -19,7 +19,7 @@ prezzo[[1]] <- url %>%
   html_nodes(".lif__pricing") %>% 
   html_text()
 
-#TROVARE UN MODO PER CALCOLARE IL NUMERO DI PAGINE TOTALI
+
 #attenzione a non mettere più pagine delle esistenti
 try(
 for (i in 2:n_pag_da_cercare) {
@@ -31,8 +31,7 @@ for (i in 2:n_pag_da_cercare) {
 }
 )
 #sembra che il prezzo sia obbligatorio ma bisogna prestare attenzione a  "€ 145.000€ 159.500(-9.1%)"
-###posso estrarre il prezzo giusto estraendo le cifre tra i due €€ nelle stringhe in cui è presente il simbolo %
-###forse già risolto con la seconda parte della regex expression <- Già risolto
+
 
 #estrazione del prezzo
 #numero di osservazioni
@@ -83,33 +82,6 @@ for (i in 2:n_pag_da_cercare) {
 
 blc <- blocco
 #estrazione della superficie####
-#ATTENZIONE nela ricerca nel sito escludere gli immobili con valore >= a 1000000
-#numero di osservazioni, cioè di annunci di cui ho fatto lo scrape in tuttel le pagine
-# n <- 0
-# for (j in 1:length(blocco)) {
-#   n <- n + (length(blocco[[j]]))
-# }
-
-#creazione della matrice per mettere le stringhe dei prezzi "sporche" <- non più utile
-#vec_superficie <- rep(NA, n)
-
-# #riempimento della lista <- non funziona !?
-# k <- 1
-# for (j in 1:length(blocco)) {
-#   for (i in c(1:length(blocco[[j]]))) {
-#     vec_superficie[k] <- str_extract_all(blocco[[j]][[i]], "([0-9]{2,})[- .]m")
-#     k <- k+1
-#   }
-# }
-# vec_superficie
-
-#provando il comando che mi serve su una singola stringa
-# blocco[[1]][3]
-# str_extract_all(blocco[[1]][[3]],  "\\d")
-
-#voglio tenere solo le stringhe che mi interessano in cui c'è "m2superficie"
-#quindi prima impongo NA su tutte le stringhe che non contengono m2superficie
-#e poi le rimuovo con il comando apposito per gli NA
 
 ###per una sola pagina
 for (i in c(1:length(blocco[[1]]))) {
@@ -163,27 +135,7 @@ blocco2b <-lapply(blocco2a, f2)
 #convertire in integers
 mqvecperdf <- as.integer(unlist(blocco2b, use.names = FALSE))
 #locali####
-#ATTENZIONE in blc[[1]] le prime 50 righe, dopo il primo annuncio, non riesco a capire da dove 
-#arrivino, ma da quando poi ricominciano gli annunci veri sono giuste
-#sembra che sia un problema solo della prima pagina
 
-#voglio tenere solo le stringhe che mi interessano in cui c'è "locali\n"
-#quindi prima impongo NA su tutte le stringhe che non contengono m2superficie
-#e poi le rimuovo con il comando apposito per gli NA
-
-###per una sola pagina
-#per ora i 2-5locali e 1-5 locali li gestisco così(perchè nei mq e nei prezzi ho il record)
-#l'idea mi sembra giusta ma i primi due cicli for non fungono
-#magari non mi trova il "-"
-#provare ad usare una regex expression invece della ricerca sulla stringa
-# blc <- blocco
-# blc[[1]][2]
-# grepl(pattern = "\\slocali", blc[[1]][2])
-# grepl(pattern = "([0-9]{1,})\\slocali", blc[[1]][2])
-# grepl(pattern = "-([0-9]{1})\\slocali", blc[[1]][2])
-# grepl(pattern = "([0-9]{1})-([0-9]{1})\\slocali", blc[[1]][2])
-# blc[[1]][61]
-# grepl(pattern = "([0-9]{1})-([0-9]{1})\\slocali", blc[[1]][61])
 
 # fixed = TRUE usa l'exact match'
 for (i in c(1:length(blc[[1]]))) {
@@ -205,8 +157,8 @@ for (i in c(1:length(blc[[1]]))) {
   }
 }
 blc[[1]]
-#ATTENZIONE per sicurezza o ribuovere le variabili di prima dopo averle utilizzate o cambiare il 
-# nome qui dopo
+
+                 
 #rimuovere gli NA dalla lista
 #b è il blocco con gli NA
 b <- blc[[1]]
@@ -217,11 +169,11 @@ b1
 #sostituire le parti che non sono numero con nulla
 b2a <- str_replace_all(b1, "locali\n", "")
 b2b <- str_replace_all(b2a, "\n", "")
-#b2c <- str_replace_all(b2b, "+", "") <- non si può dare
+
 b2b
 
 #ATTENZIONE: cosa succede ai casi dove i locali sono: n-m
-#li rimuove, devo imputare qualcosa se non mi slitta tutto
+#li rimuove, devo imputare qualcosa se non slitta tutto
 
 #convertire tutto nel formato giusto
 b3 <- as.integer(b2b) 
@@ -229,22 +181,8 @@ b3
 # mi darà NA se ci sono n+ locali
 length(b3)
 
-###per tutte le altre pagine 
-# try(
-#   for (j in 1:length(blocco1[[j]])) {#perchè blocco1[[j]] e non blocco1?
-#     for (i in c(1:length(blocco1[[j]]))) {
-#       if(grepl(pattern = "m2superficie", blocco1[[j]][i], fixed = TRUE)) {
-#         print("ok")
-#       } else {
-#         blocco1[[j]][[i]] <- NA
-#         print("ora ok")
-#       }
-#     }
-#   }, silent = TRUE)
-
 try(
 for (j in 2:length(blc)) { # due perchè la prima pagina l'ho fatta separatamente
-  # controllare per questa cosa anche dalle altre parti
   for (i in c(1:length(blc[[j]]))) {
   s <- 0
   if(grepl(pattern = "([0-9]{1})-([0-9]{1})\\slocali", blc[[j]][i])) {
@@ -295,7 +233,7 @@ length(vec_prezzo_int)
 length(mqvecperdf)
 length(localivecperdf)
 
-#aggiungere numero di pagina e numero annuncio
+#aggiunge numero di pagina e numero annuncio
 annuncio <- rep(1:25,n_pag_da_cercare)
 pagina <- rep(1:n_pag_da_cercare,rep(25,n_pag_da_cercare))
 
