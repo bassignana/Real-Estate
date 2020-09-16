@@ -17,10 +17,8 @@ prices[[1]] <-
   read_html() %>% 
   html_nodes(".AdElements__ItemPrice--price-L2hvbWUv") %>% 
   html_text()
-#i prezzi delle altre pagine li posso fare con un ciclo for
-#trovare come fare il ciclo su tutte le pagine, se troppo complicato inserire manualmente un numero oppure tenere un 
-#default, intanto mi interessano solo i nuovi annunci 
-# for (i in 2:n_pag_da_cercare) {#non funge se ci sono più di due dispositivi associati all'hotspot oppure se internet è troppo lento
+
+# for (i in 2:n_pag_da_cercare) {
 #   
 #   prices[[i]] <- lapply(paste0(url2pg, i, sep = ""), 
 #                         function(url){
@@ -31,7 +29,7 @@ prices[[1]] <-
 #                         })
 # }
 
-##PERCHè IL CICLO SOTTO FUNZIONA E QUELLO SOPRA COMMENTATO NO????????? PERCHè C'è LAPPLY
+
 for (i in 2:n_pag_da_cercare) {
   url1 = paste(url2pg,i, sep="")
   prices[[i]] <- url1 %>% 
@@ -134,7 +132,6 @@ length(vec_pre)
 
 
 
-# serve inserire na dove uno dei 3 dati è mancante 
 #df####
 length(vec_prezzo)
 length(vec_mqb)
